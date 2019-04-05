@@ -105,7 +105,7 @@ Optionally, you should set the training parameters in [./keras_csp/config.py](./
  (2) Follow the [./eval_city/eval_script/eval_demo.py](./eval_city/eval_script/eval_demo.py) to get the Miss Rates of detections in `main_path` defined in line 9.
 
 ### Models
-We have provided the models trained from different datasets to help reproduce the results in our paper. You can download them through [BaiduYun](https://pan.baidu.com/s/1SSPQnbDP6zf9xf8eCDi3Fw) (Code: jcgd). For Caltech, please make sure that the version of OpenCV is 3.4.1.15, other versions will read the same image into different data values, resulting in slightly different performance.
+To reproduce the results in our paper, we have provided the models trained from different datasets. You can download them through [BaiduYun](https://pan.baidu.com/s/1SSPQnbDP6zf9xf8eCDi3Fw) (Code: jcgd). For Caltech, please make sure that the version of OpenCV is 3.4.1.15, other versions will read the same image into different data values, resulting in slightly different performance.
 1. For Caltech
  
  ResNet-50 initialized from ImageNet:
@@ -125,7 +125,15 @@ We have provided the models trained from different datasets to help reproduce th
  Height prediction: [model_CSP/cityperson/nooffset](https://pan.baidu.com/s/1SSPQnbDP6zf9xf8eCDi3Fw)
  
  Height+Offset prediction: [model_CSP/cityperson/withoffset](https://pan.baidu.com/s/1SSPQnbDP6zf9xf8eCDi3Fw)
-
+ 
+ Upon this codebase, we also have 10 trails on Height+Offset prediction. Generally, models will be converged after epoch 50. For Caltech and CityPersons, we test the results from epoch 50 to 120 and from epoch 50 to 150, respectively, and get the best result (*MR* under Reasonable setting) given in the following table.
+ 
+ | Trial | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 |
+ |:-----:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:--:|
+ |Caltech| 4.98 | 4.75 | 4.57 | 4.84 | 4.72 | 4.15 | 5.17 | 4.60 | 4.63 | 4.91 |
+ |CityPersons| 11.31 | 11.17 | 11.42 | 11.69 | 11.56 | 11.05 | 11.59 | 11.78 | 11.27 | 10.62 |
+ 
+ 
 ### Extension--Face Detection
 1. Data preparation 
 
@@ -135,7 +143,7 @@ We have provided the models trained from different datasets to help reproduce th
 
  For face detection, CSP is required to predict both height and width of each instance with various aspect ratios. You can follow the [./train_wider.py](./train_wider.py) to start training and [./test_wider_ms.py](./test_wider_ms.py) for multi-scale test. As a common practice, the model trained on the official training set is evaluated on both validation and test set, and the results are submitted to [WiderFace](http://mmlab.ie.cuhk.edu.hk/projects/WIDERFace/). To reprodect the result in the benchmark, we provide the model for Height+Width+Offset prediction in [model_CSP/widerface/](https://pan.baidu.com/s/1SSPQnbDP6zf9xf8eCDi3Fw).
  
- Note that we adopt the the data-augmentation strategy for training and multi-scale testing in [PyramidBox](https://arxiv.org/pdf/1803.07737.pdf), which helps us to achieve better performance in this benchmark. 
+ Note that we adopt the similar data-augmentation strategy for training and multi-scale testing in [PyramidBox](https://arxiv.org/pdf/1803.07737.pdf), which helps us to achieve better performance in this benchmark. 
 
 ## Citation
 If you think our work is useful in your research, please consider citing:
