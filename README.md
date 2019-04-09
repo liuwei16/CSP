@@ -1,5 +1,10 @@
 # High-level Semantic Feature Detection: A New Perspective for Pedestrian Detection
+
+[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/high-level-semantic-feature-detectiona-new/pedestrian-detection-caltech)](https://paperswithcode.com/sota/pedestrian-detection-caltech?p=high-level-semantic-feature-detectiona-new)
+[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/high-level-semantic-feature-detectiona-new/pedestrian-detection-citypersons)](https://paperswithcode.com/sota/pedestrian-detection-citypersons?p=high-level-semantic-feature-detectiona-new)
+
 Keras implementation of [CSP] accepted by CVPR 2019.
+
 ## Introduction
 This paper provides a new perspective for detecting pedestrians where detection is formulated as Center and Scale Prediction (CSP), the pipeline is illustrated in the following. For more details, please refer to our [paper](./docs/2019CVPR-CSP.pdf).
 ![img01](./docs/pipeline.png)
