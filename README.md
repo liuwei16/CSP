@@ -141,7 +141,7 @@ To reproduce the results in our paper, we have provided the models trained from 
  
 2. Training and Test
 
- For face detection, CSP is required to predict both height and width of each instance with various aspect ratios. You can follow the [./train_wider.py](./train_wider.py) to start training and [./test_wider_ms.py](./test_wider_ms.py) for multi-scale test. As a common practice, the model trained on the official training set is evaluated on both validation and test set, and the results are submitted to [WiderFace](http://mmlab.ie.cuhk.edu.hk/projects/WIDERFace/). To reprodect the result in the benchmark, we provide the model for Height+Width+Offset prediction in [model_CSP/widerface/](https://pan.baidu.com/s/1SSPQnbDP6zf9xf8eCDi3Fw).
+ For face detection, CSP is required to predict both height and width of each instance with various aspect ratios. You can follow the [./train_wider.py](./train_wider.py) to start training and [./test_wider_ms.py](./test_wider_ms.py) for multi-scale test. As a common practice, the model trained on the official training set is evaluated on both validation and test set, and the results are submitted to [WiderFace](http://mmlab.ie.cuhk.edu.hk/projects/WIDERFace/). To reproduce the result in the benchmark, we provide the model for Height+Width+Offset prediction in [model_CSP/widerface/](https://pan.baidu.com/s/1SSPQnbDP6zf9xf8eCDi3Fw).
  
  Note that we adopt the similar data-augmentation strategy for training and multi-scale testing in [PyramidBox](https://arxiv.org/pdf/1803.07737.pdf), which helps us to achieve better performance in this benchmark. 
 

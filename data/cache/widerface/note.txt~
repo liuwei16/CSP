@@ -1,0 +1,14 @@
+filter w>=5 and h>=5
+train:
+12880 images and 12880 valid images and 159424 boxes
+12880 images and 12876 valid images and 154301 boxes
+
+val:
+3226 images and 3226 valid images and 39708 boxes
+
+test:
+16097 images
+
+
+
+
