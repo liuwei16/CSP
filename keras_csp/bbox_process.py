@@ -38,7 +38,7 @@ def parse_det_top(Y, C, score=0.1):
             w = 0.41 * h
             s = seman[y_c[i], x_c[i]]
             x1, y1 = max(0, x_c[i] * 4 + 2 - w / 2), max(0, y_c[i] * 4 + 2)
-            boxs.append([x1, y1, min(x1 + w, C.random_crop[1]), min(y1 + h, C.random_crop[0]), s])
+            boxs.append([x1, y1, min(x1 + w, C.size_test[1]), min(y1 + h, C.size_test[0]), s])
         boxs = np.asarray(boxs, dtype=np.float32)
         keep = nms(boxs, 0.5, usegpu=False, gpu_id=0)
         boxs = boxs[keep, :]
@@ -55,7 +55,7 @@ def parse_det_bottom(Y, C, score=0.1):
             w = 0.41 * h
             s = seman[y_c[i], x_c[i]]
             x1, y1 = max(0, x_c[i] * 4 + 2 - w / 2), max(0, y_c[i] * 4 + 2-h)
-            boxs.append([x1, y1, min(x1 + w, C.random_crop[1]), min(y1 + h, C.random_crop[0]), s])
+            boxs.append([x1, y1, min(x1 + w, C.size_test[1]), min(y1 + h, C.size_test[0]), s])
         boxs = np.asarray(boxs, dtype=np.float32)
         keep = nms(boxs, 0.5, usegpu=False, gpu_id=0)
         boxs = boxs[keep, :]
@@ -98,8 +98,8 @@ def parse_wider_offset(Y, C, score=0.1,down=4,nmsthre=0.5):
             o_x = offset_x[y_c[i], x_c[i]]
             s = seman[y_c[i], x_c[i]]
             x1, y1 = max(0, (x_c[i] + o_x + 0.5) * down - w / 2), max(0, (y_c[i] + o_y + 0.5) * down - h / 2)
-            x1, y1 = min(x1, C.random_crop[1]), min(y1, C.random_crop[0])
-            boxs.append([x1, y1, min(x1 + w, C.random_crop[1]), min(y1 + h, C.random_crop[0]), s])
+            x1, y1 = min(x1, C.size_test[1]), min(y1, C.size_test[0])
+            boxs.append([x1, y1, min(x1 + w, C.size_test[1]), min(y1 + h, C.size_test[0]), s])
         boxs = np.asarray(boxs, dtype=np.float32)
         #keep = nms(boxs, nmsthre, usegpu=False, gpu_id=0)
         #boxs = boxs[keep, :]

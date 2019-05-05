@@ -12,7 +12,7 @@ C = config.Config()
 C.offset = True
 C.scale = 'hw'
 C.num_scale = 2
-cache_path = 'data/cache/wider/val'
+cache_path = 'data/cache/widerface/val'
 with open(cache_path, 'rb') as fid:
 	val_data = cPickle.load(fid)
 num_imgs = len(val_data)
