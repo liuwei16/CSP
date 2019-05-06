@@ -203,8 +203,8 @@ def augment_wider(img_data, c):
     else:
         img = img[0:crop_p, 0:crop_p]
 
-    if np.minimum(img.shape[0], img.shape[1]) < c.random_crop[0]:
-        img, gts, igs = random_pave(img, gts, igs, c.random_crop)
+    if np.minimum(img.shape[0], img.shape[1]) < c.size_train[0]:
+        img, gts, igs = random_pave(img, gts, igs, c.size_train)
 
     img_data_aug['bboxes'] = gts
     img_data_aug['ignoreareas'] = igs
