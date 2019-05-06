@@ -162,7 +162,7 @@ def augment_wider(img_data, c):
     gts = np.copy(img_data_aug['bboxes'])
 
     scales = np.asarray([16, 32, 64, 128, 256])
-    crop_p = c.random_crop[0]
+    crop_p = c.size_train[0]
     if len(gts) > 0:
         sel_id = np.random.randint(0, len(gts))
         s_face = np.sqrt((gts[sel_id, 2] - gts[sel_id, 0]) * (gts[sel_id, 3] - gts[sel_id, 1]))
