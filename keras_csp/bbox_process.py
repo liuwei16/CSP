@@ -1,6 +1,6 @@
-from __future__ import division
+
 import numpy as np
-from nms_wrapper import nms
+from .nms_wrapper import nms
 
 def parse_det(Y, C, score=0.1, down=4,scale='h'):
     seman = Y[0][0, :, :, 0]
@@ -103,7 +103,7 @@ def parse_wider_offset(Y, C, score=0.1,down=4,nmsthre=0.5):
         boxs = np.asarray(boxs, dtype=np.float32)
         #keep = nms(boxs, nmsthre, usegpu=False, gpu_id=0)
         #boxs = boxs[keep, :]
-	boxs = soft_bbox_vote(boxs,thre=nmsthre)
+        boxs = soft_bbox_vote(boxs,thre=nmsthre)
     return boxs
 
 def soft_bbox_vote(det,thre=0.35,score=0.05):

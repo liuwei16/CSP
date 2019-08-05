@@ -8,7 +8,7 @@ annType = 'bbox' #specify type here
 annFile = '../val_gt.json'
 main_path = '../../output/valresults/city/h/off'
 for f in sorted(os.listdir(main_path)):
-    print f
+    print(f)
     # initialize COCO detections api
     dt_path = os.path.join(main_path, f)
     resFile = os.path.join(dt_path,'val_dt.json')

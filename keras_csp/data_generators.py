@@ -1,5 +1,5 @@
-from __future__ import absolute_import
-from __future__ import division
+
+
 # import numpy as np
 # import cv2
 import random
@@ -165,7 +165,7 @@ def get_data(ped_data, C, batchsize = 8):
 				if C.offset:
 					y_offset_batch.append(np.expand_dims(y_offset, axis=0))
 			except Exception as e:
-				print ('get_batch_gt:',e)
+				print(('get_batch_gt:',e))
 		x_img_batch = np.concatenate(x_img_batch,axis=0)
 		y_seman_batch = np.concatenate(y_seman_batch, axis=0)
 		y_height_batch = np.concatenate(y_height_batch, axis=0)
@@ -215,7 +215,7 @@ def get_data_hybrid(ped_data, emp_data, C, batchsize = 8,hyratio=0.5):
 					y_offset_batch.append(np.expand_dims(y_offset, axis=0))
 
 			except Exception as e:
-				print ('get_batch_gt:',e)
+				print(('get_batch_gt:',e))
 		for img_data in emp_data[current_emp:current_emp + batchsize_emp]:
 			try:
 				img_data, x_img = data_augment.augment(img_data, C)
@@ -240,7 +240,7 @@ def get_data_hybrid(ped_data, emp_data, C, batchsize = 8,hyratio=0.5):
 				if C.offset:
 					y_offset_batch.append(np.expand_dims(y_offset, axis=0))
 			except Exception as e:
-				print ('get_batch_gt_emp:',e)
+				print(('get_batch_gt_emp:',e))
 		x_img_batch = np.concatenate(x_img_batch,axis=0)
 		y_seman_batch = np.concatenate(y_seman_batch, axis=0)
 		y_height_batch = np.concatenate(y_height_batch, axis=0)
@@ -279,7 +279,7 @@ def get_data_wider(ped_data, C, batchsize = 8):
 				if C.offset:
 					y_offset_batch.append(np.expand_dims(y_offset, axis=0))
 			except Exception as e:
-				print ('get_batch_gt:',e)
+				print(('get_batch_gt:',e))
 		x_img_batch = np.concatenate(x_img_batch,axis=0)
 		y_seman_batch = np.concatenate(y_seman_batch, axis=0)
 		y_height_batch = np.concatenate(y_height_batch, axis=0)

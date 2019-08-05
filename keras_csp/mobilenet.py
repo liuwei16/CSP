@@ -1,6 +1,6 @@
-from __future__ import print_function
-from __future__ import absolute_import
-from __future__ import division
+
+
+
 from keras.layers import *
 from keras import backend as K
 import numpy as np

@@ -1,7 +1,7 @@
-from __future__ import division
+
 import os
 import cv2
-import cPickle
+import pickle
 import numpy as np
 from scipy import io as scio
 import time
@@ -64,5 +64,5 @@ for type in types:
 		image_data.append(annotation)
 	if not os.path.exists(res_path):
 		with open(res_path, 'wb') as fid:
-			cPickle.dump(image_data, fid, cPickle.HIGHEST_PROTOCOL)
-	print '{} has {} images and {} valid images, {} valid gt and {} ignored gt'.format(type, len(annos[index][0]), valid_count, box_count, iggt_count)
+			pickle.dump(image_data, fid, pickle.HIGHEST_PROTOCOL)
+	print('{} has {} images and {} valid images, {} valid gt and {} ignored gt'.format(type, len(annos[index][0]), valid_count, box_count, iggt_count))

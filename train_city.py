@@ -1,9 +1,9 @@
-from __future__ import division
+
 import random
 import sys, os
 import time
 import numpy as np
-import cPickle
+import pickle
 from keras.utils import generic_utils
 from keras.optimizers import Adam
 from keras.layers import Input
@@ -27,10 +27,10 @@ os.environ["CUDA_VISIBLE_DEVICES"] = C.gpu_ids
 # get the training data
 cache_path = 'data/cache/cityperson/train_h50'
 with open(cache_path, 'rb') as fid:
-    train_data = cPickle.load(fid)
+    train_data = pickle.load(fid)
 num_imgs_train = len(train_data)
 random.shuffle(train_data)
-print 'num of training samples: {}'.format(num_imgs_train)
+print('num of training samples: {}'.format(num_imgs_train))
 data_gen_train = data_generators.get_data(train_data, C, batchsize=batchsize)
 
 # define the base network (resnet here, can be MobileNet, etc)
@@ -53,7 +53,7 @@ model_tea = Model(img_input, preds_tea)
 
 model.load_weights(weight_path, by_name=True)
 model_tea.load_weights(weight_path, by_name=True)
-print 'load weights from {}'.format(weight_path)
+print('load weights from {}'.format(weight_path))
 
 if C.offset:
     out_path = 'output/valmodels/city/%s/off' % (C.scale)
@@ -79,12 +79,12 @@ add_epoch = 0
 losses = np.zeros((epoch_length, 3))
 
 best_loss = np.Inf
-print('Starting training with lr {} and alpha {}'.format(C.init_lr, C.alpha))
+print(('Starting training with lr {} and alpha {}'.format(C.init_lr, C.alpha)))
 start_time = time.time()
 total_loss_r, cls_loss_r1, regr_loss_r1, offset_loss_r1 = [], [], [], []
 for epoch_num in range(C.num_epochs):
     progbar = generic_utils.Progbar(epoch_length)
-    print('Epoch {}/{}'.format(epoch_num + 1 + add_epoch, C.num_epochs + C.add_epoch))
+    print(('Epoch {}/{}'.format(epoch_num + 1 + add_epoch, C.num_epochs + C.add_epoch)))
     while True:
         try:
             X, Y = next(data_gen_train)
@@ -121,19 +121,19 @@ for epoch_num in range(C.num_epochs):
                 cls_loss_r1.append(cls_loss1)
                 regr_loss_r1.append(regr_loss1)
                 offset_loss_r1.append(offset_loss1)
-                print('Total loss: {}'.format(total_loss))
-                print('Elapsed time: {}'.format(time.time() - start_time))
+                print(('Total loss: {}'.format(total_loss)))
+                print(('Elapsed time: {}'.format(time.time() - start_time)))
 
                 iter_num = 0
                 start_time = time.time()
 
                 if total_loss < best_loss:
-                    print('Total loss decreased from {} to {}, saving weights'.format(best_loss, total_loss))
+                    print(('Total loss decreased from {} to {}, saving weights'.format(best_loss, total_loss)))
                     best_loss = total_loss
                 model_tea.save_weights(os.path.join(out_path, 'net_e{}_l{}.hdf5'.format(epoch_num + 1 + add_epoch, total_loss)))
                 break
         except Exception as e:
-            print ('Exception: {}'.format(e))
+            print(('Exception: {}'.format(e)))
             continue
     records = np.concatenate((np.asarray(total_loss_r).reshape((-1, 1)),
                               np.asarray(cls_loss_r1).reshape((-1, 1)),

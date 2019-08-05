@@ -1,7 +1,7 @@
-from __future__ import division
+
 import os
 import time
-import cPickle
+import pickle
 from keras.layers import Input
 from keras.models import Model
 from keras_csp import config, bbox_process
@@ -13,9 +13,9 @@ C = config.Config()
 C.offset = True
 cache_path = 'data/cache/caltech/test'
 with open(cache_path, 'rb') as fid:
-	val_data = cPickle.load(fid)
+	val_data = pickle.load(fid)
 num_imgs = len(val_data)
-print 'num of val samples: {}'.format(num_imgs)
+print('num of val samples: {}'.format(num_imgs))
 
 C.size_test = (480, 640)
 input_shape_img = (C.size_test[0], C.size_test[1], 3)
@@ -42,11 +42,11 @@ for w_ind in range(51, 121):
 			cur_file = f
 			break
 	weight1 = os.path.join(w_path, cur_file)
-	print 'load weights from {}'.format(weight1)
+	print('load weights from {}'.format(weight1))
 	model.load_weights(weight1, by_name=True)
 	res_path = os.path.join(out_path, '%03d'%int(str(w_ind)))
 
-	print res_path
+	print(res_path)
 	if not os.path.exists(res_path):
 		os.mkdir(res_path)
 	for st in range(6, 11):
@@ -83,4 +83,4 @@ for w_ind in range(51, 121):
 			res_all += np.concatenate((f_res, boxes), axis=-1).tolist()
 		if frame_number_next == 30 or f == num_imgs - 1:
 			np.savetxt(video_path, np.array(res_all), fmt='%6f')
-	print time.time() - start_time
+	print(time.time() - start_time)

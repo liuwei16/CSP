@@ -1,7 +1,7 @@
-from __future__ import division
+
 import os
 import time
-import cPickle
+import pickle
 from keras.layers import Input
 from keras.models import Model
 from keras_csp import config, bbox_process
@@ -14,9 +14,9 @@ C.scale = 'hw'
 C.num_scale = 2
 cache_path = 'data/cache/widerface/val'
 with open(cache_path, 'rb') as fid:
-	val_data = cPickle.load(fid)
+	val_data = pickle.load(fid)
 num_imgs = len(val_data)
-print 'num of val samples: {}'.format(num_imgs)
+print('num of val samples: {}'.format(num_imgs))
 
 C.size_test = [0, 0]
 input_shape_img = (None, None, 3)
@@ -44,12 +44,12 @@ for w_ind in range(382,383):
 			cur_file = f
 			break
 	weight1 = os.path.join(w_path, cur_file)
-	print 'load weights from {}'.format(weight1)
+	print('load weights from {}'.format(weight1))
 	model.load_weights(weight1, by_name=True)
 	res_path = os.path.join(out_path, '%03d'%int(str(w_ind)))
 	if not os.path.exists(res_path):
 		os.makedirs(res_path)
-	print res_path
+	print(res_path)
 
 	start_time = time.time()
 	for f in range(num_imgs):
@@ -160,4 +160,4 @@ for w_ind in range(382,383):
 			for line in dets:
 				f.write('{:.0f} {:.0f} {:.0f} {:.0f} {:.3f}\n'.
 						format(line[0], line[1], line[2] - line[0] + 1, line[3] - line[1] + 1, line[4]))
-	print time.time() - start_time
+	print(time.time() - start_time)

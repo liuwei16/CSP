@@ -1,6 +1,6 @@
 import os
 import cv2
-import cPickle
+import pickle
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -24,7 +24,7 @@ while index<num_lines:
 	filename = lines[index].strip()
 	img_count += 1
 	if img_count%1000 == 0:
-		print img_count
+		print(img_count)
 	num_obj = int(lines[index+1])
 	filepath = os.path.join(img_path, filename)
 	img = cv2.imread(filepath)
@@ -48,6 +48,6 @@ while index<num_lines:
 		image_data.append(annotation)
 	index += (2+num_obj)
 
-print '{} images and {} valid images and {} boxes'.format(img_count, valid_count,box_count)
+print('{} images and {} valid images and {} boxes'.format(img_count, valid_count,box_count))
 with open(res_path, 'wb') as fid:
-	cPickle.dump(image_data, fid, cPickle.HIGHEST_PROTOCOL)
+	pickle.dump(image_data, fid, pickle.HIGHEST_PROTOCOL)

@@ -71,8 +71,8 @@ class ParallelModel(KM.Model):
             with tf.device('/gpu:%d' % i):
                 with tf.name_scope('tower_%d' % i):
                     # Run a slice of inputs through this replica
-                    zipped_inputs = zip(self.inner_model.input_names,
-                                        self.inner_model.inputs)
+                    zipped_inputs = list(zip(self.inner_model.input_names,
+                                        self.inner_model.inputs))
                     inputs = [
                         KL.Lambda(lambda s: input_slices[name][i],
                                   output_shape=lambda s: (None,)+s[1:])(tensor)
@@ -146,8 +146,8 @@ if __name__ == "__main__":
     x_train = np.expand_dims(x_train, -1).astype('float32') / 255
     x_test = np.expand_dims(x_test, -1).astype('float32') / 255
 
-    print('x_train shape:', x_train.shape)
-    print('x_test shape:', x_test.shape)
+    print(('x_train shape:', x_train.shape))
+    print(('x_test shape:', x_test.shape))
 
     # Build data generator and model
     datagen = ImageDataGenerator()

@@ -1,7 +1,7 @@
-from __future__ import division
+
 import os
 import time
-import cPickle
+import pickle
 from keras.layers import Input
 from keras.models import Model
 from keras_csp import config, bbox_process
@@ -12,9 +12,9 @@ C = config.Config()
 C.offset = True
 cache_path = 'data/cache/cityperson/val_500'
 with open(cache_path, 'rb') as fid:
-	val_data = cPickle.load(fid)
+	val_data = pickle.load(fid)
 num_imgs = len(val_data)
-print 'num of val samples: {}'.format(num_imgs)
+print('num of val samples: {}'.format(num_imgs))
 
 C.size_test = (1024, 2048)
 input_shape_img = (C.size_test[0], C.size_test[1], 3)
@@ -48,12 +48,12 @@ for w_ind in range(51,151):
 			cur_file = f
 			break
 	weight1 = os.path.join(w_path, cur_file)
-	print 'load weights from {}'.format(weight1)
+	print('load weights from {}'.format(weight1))
 	model.load_weights(weight1, by_name=True)
 	res_path = os.path.join(out_path, '%03d'%int(str(w_ind)))
 	if not os.path.exists(res_path):
 		os.makedirs(res_path)
-	print res_path
+	print(res_path)
 	res_file = os.path.join(res_path, 'val_det.txt')
 	res_all = []
 	start_time = time.time()
@@ -72,4 +72,4 @@ for w_ind in range(51,151):
 			boxes[:, [2, 3]] -= boxes[:, [0, 1]]
 			res_all += np.concatenate((f_res, boxes), axis=-1).tolist()
 	np.savetxt(res_file, np.array(res_all), fmt='%6f')
-	print time.time() - start_time
+	print(time.time() - start_time)

@@ -1,5 +1,5 @@
 import os
-import cPickle
+import pickle
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -53,11 +53,11 @@ for l in range(len(files)):
 	else:
 		image_data_gt.append(annotation)
 		valid_count += 1
-print '{} images and {} valid images, {} valid gt and {} ignored gt'.format(len(files), valid_count, box_count, iggt_count)
+print('{} images and {} valid images, {} valid gt and {} ignored gt'.format(len(files), valid_count, box_count, iggt_count))
 
 if not os.path.exists(res_path_gt):
 	with open(res_path_gt, 'wb') as fid:
-		cPickle.dump(image_data_gt, fid, cPickle.HIGHEST_PROTOCOL)
+		pickle.dump(image_data_gt, fid, pickle.HIGHEST_PROTOCOL)
 if not os.path.exists(res_path_nogt):
 	with open(res_path_nogt, 'wb') as fid:
-		cPickle.dump(image_data_nogt, fid, cPickle.HIGHEST_PROTOCOL)
+		pickle.dump(image_data_nogt, fid, pickle.HIGHEST_PROTOCOL)
