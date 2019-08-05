@@ -27,7 +27,7 @@ os.environ["CUDA_VISIBLE_DEVICES"] = C.gpu_ids
 # get the training data
 cache_path = 'data/cache/cityperson/train_h50'
 with open(cache_path, 'rb') as fid:
-    train_data = pickle.load(fid)
+    train_data = pickle.load(fid, encoding='latin1')
 num_imgs_train = len(train_data)
 random.shuffle(train_data)
 print('num of training samples: {}'.format(num_imgs_train))
@@ -86,55 +86,52 @@ for epoch_num in range(C.num_epochs):
     progbar = generic_utils.Progbar(epoch_length)
     print(('Epoch {}/{}'.format(epoch_num + 1 + add_epoch, C.num_epochs + C.add_epoch)))
     while True:
-        try:
-            X, Y = next(data_gen_train)
-            loss_s1 = model.train_on_batch(X, Y)
+        X, Y = next(data_gen_train)
+        loss_s1 = model.train_on_batch(X, Y)
 
-            for l in model_tea.layers:
-                weights_tea = l.get_weights()
-                if len(weights_tea)>0:
-                    if num_gpu > 1:
-                        weights_stu = model_stu.get_layer(name=l.name).get_weights()
-                    else:
-                        weights_stu = model.get_layer(name=l.name).get_weights()
-                    weights_tea = [C.alpha*w_tea + (1-C.alpha)*w_stu for (w_tea, w_stu) in zip(weights_tea, weights_stu)]
-                    l.set_weights(weights_tea)
-            # print loss_s1
-            losses[iter_num, 0] = loss_s1[1]
-            losses[iter_num, 1] = loss_s1[2]
-            if C.offset:
-                losses[iter_num, 2] = loss_s1[3]
-            else:
-                losses[iter_num, 2] = 0
+        for l in model_tea.layers:
+            weights_tea = l.get_weights()
+            if len(weights_tea)>0:
+                if num_gpu > 1:
+                    weights_stu = model_stu.get_layer(name=l.name).get_weights()
+                else:
+                    weights_stu = model.get_layer(name=l.name).get_weights()
+                weights_tea = [C.alpha*w_tea + (1-C.alpha)*w_stu for (w_tea, w_stu) in zip(weights_tea, weights_stu)]
+                l.set_weights(weights_tea)
+        # print loss_s1
+        losses[iter_num, 0] = loss_s1[1]
+        losses[iter_num, 1] = loss_s1[2]
+        if C.offset:
+            losses[iter_num, 2] = loss_s1[3]
+        else:
+            losses[iter_num, 2] = 0
 
-            iter_num += 1
-            if iter_num % 20 == 0:
-                progbar.update(iter_num,
-                               [('cls', np.mean(losses[:iter_num, 0])), ('regr_h', np.mean(losses[:iter_num, 1])), ('offset', np.mean(losses[:iter_num, 2]))])
-            if iter_num == epoch_length:
-                cls_loss1 = np.mean(losses[:, 0])
-                regr_loss1 = np.mean(losses[:, 1])
-                offset_loss1 = np.mean(losses[:, 2])
-                total_loss = cls_loss1+regr_loss1+offset_loss1
+        iter_num += 1
+        if iter_num % 20 == 0:
+            progbar.update(iter_num,
+                           [('cls', np.mean(losses[:iter_num, 0])), ('regr_h', np.mean(losses[:iter_num, 1])), ('offset', np.mean(losses[:iter_num, 2]))])
+        if iter_num == epoch_length:
+            cls_loss1 = np.mean(losses[:, 0])
+            regr_loss1 = np.mean(losses[:, 1])
+            offset_loss1 = np.mean(losses[:, 2])
+            total_loss = cls_loss1+regr_loss1+offset_loss1
 
-                total_loss_r.append(total_loss)
-                cls_loss_r1.append(cls_loss1)
-                regr_loss_r1.append(regr_loss1)
-                offset_loss_r1.append(offset_loss1)
-                print(('Total loss: {}'.format(total_loss)))
-                print(('Elapsed time: {}'.format(time.time() - start_time)))
+            total_loss_r.append(total_loss)
+            cls_loss_r1.append(cls_loss1)
+            regr_loss_r1.append(regr_loss1)
+            offset_loss_r1.append(offset_loss1)
+            print(('Total loss: {}'.format(total_loss)))
+            print(('Elapsed time: {}'.format(time.time() - start_time)))
 
-                iter_num = 0
-                start_time = time.time()
+            iter_num = 0
+            start_time = time.time()
 
-                if total_loss < best_loss:
-                    print(('Total loss decreased from {} to {}, saving weights'.format(best_loss, total_loss)))
-                    best_loss = total_loss
-                model_tea.save_weights(os.path.join(out_path, 'net_e{}_l{}.hdf5'.format(epoch_num + 1 + add_epoch, total_loss)))
-                break
-        except Exception as e:
-            print(('Exception: {}'.format(e)))
-            continue
+            if total_loss < best_loss:
+                print(('Total loss decreased from {} to {}, saving weights'.format(best_loss, total_loss)))
+                best_loss = total_loss
+            model_tea.save_weights(os.path.join(out_path, 'net_e{}_l{}.hdf5'.format(epoch_num + 1 + add_epoch, total_loss)))
+            break
+
     records = np.concatenate((np.asarray(total_loss_r).reshape((-1, 1)),
                               np.asarray(cls_loss_r1).reshape((-1, 1)),
                               np.asarray(regr_loss_r1).reshape((-1, 1)),
