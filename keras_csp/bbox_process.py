@@ -1,6 +1,6 @@
 
 import numpy as np
-from .nms_wrapper import nms
+from keras_csp.nms_wrapper import nms
 
 def parse_det(Y, C, score=0.1, down=4,scale='h'):
     seman = Y[0][0, :, :, 0]

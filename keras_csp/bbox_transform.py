@@ -68,9 +68,9 @@ def compute_targets(ex_rois, gt_rois, classifier_regr_std,std):
     assert gt_rois.shape[1] == 4
 
     targets = bbox_transform(ex_rois, gt_rois)
-	# Optionally normalize targets by a precomputed mean and stdev
+    # Optionally normalize targets by a precomputed mean and stdev
     if std:
-		targets = targets/np.array(classifier_regr_std)
+        targets = targets/np.array(classifier_regr_std)
     return targets
 
 def clip_boxes(boxes, im_shape):
