@@ -477,12 +477,13 @@ def nn_p2p3p4p5(img_input=None, alpha=1.0, depth_multiplier=1,  trainable=True):
 
     return [x_class, x_regr]
 
+
 # focal loss like
 def prior_probability_onecls(num_class=1, probability=0.01):
-	def f(shape, dtype=keras.backend.floatx()):
-		assert(shape[0] % num_class == 0)
-		# set bias to -log((1 - p)/p) for foregound
-		result = np.ones(shape, dtype=dtype) * -math.log((1 - probability) / probability)
-		# set bias to -log(p/(1 - p)) for background
-		return result
-	return f
+    def f(shape, dtype=keras.backend.floatx()):
+        assert(shape[0] % num_class == 0)
+        # set bias to -log((1 - p)/p) for foregound
+        result = np.ones(shape, dtype=dtype) * -math.log((1 - probability) / probability)
+        # set bias to -log(p/(1 - p)) for background
+        return result
+    return f
