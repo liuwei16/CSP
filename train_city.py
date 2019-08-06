@@ -1,4 +1,4 @@
-
+import glob
 import random
 import sys, os
 import time
@@ -38,14 +38,31 @@ if C.network=='resnet50':
     from keras_csp import resnet50 as nn
     weight_path = 'data/models/resnet50_weights_tf_dim_ordering_tf_kernels.h5'
 
+
+if C.offset:
+    out_path = 'output/valmodels/city/%s/off' % (C.scale)
+else:
+    out_path = 'output/valmodels/city/%s/nooff' % (C.scale)
+if not os.path.exists(out_path):
+    os.makedirs(out_path)
+    epoch = 0
+else:
+    int_strings = [*map(str, range(10))]
+    checkpoint_paths = glob.glob(out_path + "/net*.hdf5")
+    checkpoint_names = [f.split("/")[-1] for f in checkpoint_paths]
+    epochs = [*map(int, [f.split("net_e")[1].split("_")[0] for f in checkpoint_names if "net_e" in f])]
+    epoch = np.argmax(epochs)
+    weight_path = checkpoint_paths[epoch]
+
+
 input_shape_img = (C.size_train[0], C.size_train[1], 3)
 img_input = Input(shape=input_shape_img)
 # define the network prediction
 preds = nn.nn_p3p4p5(img_input, offset=C.offset, num_scale=C.num_scale, trainable=True)
 preds_tea = nn.nn_p3p4p5(img_input, offset=C.offset, num_scale=C.num_scale, trainable=True)
-
 model = Model(img_input, preds)
-if num_gpu>1:
+
+if num_gpu > 1:
     from keras_csp.parallel_model import ParallelModel
     model = ParallelModel(model, int(num_gpu))
     model_stu = Model(img_input, preds)
@@ -55,12 +72,6 @@ model.load_weights(weight_path, by_name=True)
 model_tea.load_weights(weight_path, by_name=True)
 print('load weights from {}'.format(weight_path))
 
-if C.offset:
-    out_path = 'output/valmodels/city/%s/off' % (C.scale)
-else:
-    out_path = 'output/valmodels/city/%s/nooff' % (C.scale)
-if not os.path.exists(out_path):
-    os.makedirs(out_path)
 res_file = os.path.join(out_path,'records.txt')
 
 optimizer = Adam(lr=C.init_lr)
@@ -82,7 +93,7 @@ best_loss = np.Inf
 print(('Starting training with lr {} and alpha {}'.format(C.init_lr, C.alpha)))
 start_time = time.time()
 total_loss_r, cls_loss_r1, regr_loss_r1, offset_loss_r1 = [], [], [], []
-for epoch_num in range(C.num_epochs):
+for epoch_num in range(epoch, C.num_epochs):
     progbar = generic_utils.Progbar(epoch_length)
     print(('Epoch {}/{}'.format(epoch_num + 1 + add_epoch, C.num_epochs + C.add_epoch)))
     while True:
