@@ -51,8 +51,9 @@ else:
     checkpoint_paths = glob.glob(out_path + "/net*.hdf5")
     checkpoint_names = [f.split("/")[-1] for f in checkpoint_paths]
     epochs = [*map(int, [f.split("net_e")[1].split("_")[0] for f in checkpoint_names if "net_e" in f])]
-    epoch = np.argmax(epochs)
-    weight_path = checkpoint_paths[epoch]
+    max_epoch_idx = np.argmax(epochs)
+    epoch = epochs[max_epoch_idx]
+    weight_path = checkpoint_paths[max_epoch_idx]
 
 
 input_shape_img = (C.size_train[0], C.size_train[1], 3)
