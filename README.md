@@ -10,10 +10,10 @@ Besides the superority on pedestrian detection demonstrated in the paper, we tak
 
 ### Dependencies
 
-* Python 2.7
-* Tensorflow 1.4.1
-* Keras 2.0.6
-* OpenCV 3.4.1.15
+* Python >= 3.6
+* Tensorflow >= 1.1.3
+* Keras >= 2.0.6
+* OpenCV >= 3.4.1.15
 
 ## Contents
 1. [Installation](#installation)
@@ -32,6 +32,12 @@ Besides the superority on pedestrian detection demonstrated in the paper, we tak
 ```
   pip install -r requirements.txt
 ```
+
+3. Build dependencies
+```
+  python setup.py build_ext --inplace
+```
+
 
 ### Preparation
 1. Download the dataset.
