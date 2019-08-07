@@ -15,7 +15,7 @@ from keras_csp import losses as losses
 C = config.Config()
 C.gpu_ids = '0,1,2,3'
 C.onegpu = 2
-C.size_train = (640,1280)
+C.size_train = (640, 1280)
 C.init_lr = 2e-4
 C.num_epochs = 150
 C.offset = True
@@ -34,10 +34,10 @@ print('num of training samples: {}'.format(num_imgs_train))
 data_gen_train = data_generators.get_data(train_data, C, batchsize=batchsize)
 
 # define the base network (resnet here, can be MobileNet, etc)
-if C.network=='resnet50':
+if C.network == 'resnet50':
     from keras_csp import resnet50 as nn
-    weight_path = 'data/models/resnet50_weights_tf_dim_ordering_tf_kernels.h5'
 
+    weight_path = 'data/models/resnet50_weights_tf_dim_ordering_tf_kernels.h5'
 
 if C.offset:
     out_path = 'output/valmodels/city/%s/off' % (C.scale)
@@ -54,7 +54,6 @@ else:
     epoch = epochs[max_epoch_idx]
     weight_path = checkpoint_paths[max_epoch_idx]
 
-
 input_shape_img = (C.size_train[0], C.size_train[1], 3)
 img_input = Input(shape=input_shape_img)
 # define the network prediction
@@ -64,6 +63,7 @@ model = Model(img_input, preds)
 
 if num_gpu > 1:
     from keras_csp.parallel_model import ParallelModel
+
     model = ParallelModel(model, int(num_gpu))
     model_stu = Model(img_input, preds)
 model_tea = Model(img_input, preds_tea)
@@ -72,19 +72,18 @@ model.load_weights(weight_path, by_name=True)
 model_tea.load_weights(weight_path, by_name=True)
 print('load weights from {}'.format(weight_path))
 
-res_file = os.path.join(out_path,'records.txt')
+res_file = os.path.join(out_path, 'records.txt')
 
 optimizer = Adam(lr=C.init_lr)
 if C.offset:
     model.compile(optimizer=optimizer, loss=[losses.cls_center, losses.regr_h, losses.regr_offset])
 else:
-    if C.scale=='hw':
+    if C.scale == 'hw':
         model.compile(optimizer=optimizer, loss=[losses.cls_center, losses.regr_hw])
     else:
         model.compile(optimizer=optimizer, loss=[losses.cls_center, losses.regr_h])
 
-
-epoch_length = int(C.iter_per_epoch/batchsize)
+epoch_length = int(C.iter_per_epoch / batchsize)
 iter_num = 0
 add_epoch = 0
 losses = np.zeros((epoch_length, 3))
@@ -102,12 +101,13 @@ for epoch_num in range(epoch, C.num_epochs):
 
         for l in model_tea.layers:
             weights_tea = l.get_weights()
-            if len(weights_tea)>0:
+            if len(weights_tea) > 0:
                 if num_gpu > 1:
                     weights_stu = model_stu.get_layer(name=l.name).get_weights()
                 else:
                     weights_stu = model.get_layer(name=l.name).get_weights()
-                weights_tea = [C.alpha*w_tea + (1-C.alpha)*w_stu for (w_tea, w_stu) in zip(weights_tea, weights_stu)]
+                weights_tea = [C.alpha * w_tea + (1 - C.alpha) * w_stu for (w_tea, w_stu) in
+                               zip(weights_tea, weights_stu)]
                 l.set_weights(weights_tea)
         # print loss_s1
         losses[iter_num, 0] = loss_s1[1]
@@ -120,12 +120,13 @@ for epoch_num in range(epoch, C.num_epochs):
         iter_num += 1
         if iter_num % 20 == 0:
             progbar.update(iter_num,
-                           [('cls', np.mean(losses[:iter_num, 0])), ('regr_h', np.mean(losses[:iter_num, 1])), ('offset', np.mean(losses[:iter_num, 2]))])
+                           [('cls', np.mean(losses[:iter_num, 0])), ('regr_h', np.mean(losses[:iter_num, 1])),
+                            ('offset', np.mean(losses[:iter_num, 2]))])
         if iter_num == epoch_length:
             cls_loss1 = np.mean(losses[:, 0])
             regr_loss1 = np.mean(losses[:, 1])
             offset_loss1 = np.mean(losses[:, 2])
-            total_loss = cls_loss1+regr_loss1+offset_loss1
+            total_loss = cls_loss1 + regr_loss1 + offset_loss1
 
             total_loss_r.append(total_loss)
             cls_loss_r1.append(cls_loss1)
@@ -140,7 +141,8 @@ for epoch_num in range(epoch, C.num_epochs):
             if total_loss < best_loss:
                 print(('Total loss decreased from {} to {}, saving weights'.format(best_loss, total_loss)))
                 best_loss = total_loss
-            model_tea.save_weights(os.path.join(out_path, 'net_e{}_l{}.hdf5'.format(epoch_num + 1 + add_epoch, total_loss)))
+            model_tea.save_weights(
+                os.path.join(out_path, 'net_e{}_l{}.hdf5'.format(epoch_num + 1 + add_epoch, total_loss)))
             break
 
     records = np.concatenate((np.asarray(total_loss_r).reshape((-1, 1)),

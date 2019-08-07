@@ -38,6 +38,11 @@ Besides the superority on pedestrian detection demonstrated in the paper, we tak
   python setup.py build_ext --inplace
 ```
 
+4. Download pretrained weights:
+```
+./download_weights.sh
+```
+
 
 ### Preparation
 1. Download the dataset.
