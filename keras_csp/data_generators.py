@@ -132,7 +132,8 @@ def calc_gt_bottom(C, img_data, r=2):
 			scale_map[y2-r:y2+r+1, c_x-r:c_x+r+1, 0] = np.log(gts[ind,3]-gts[ind,1])
 			scale_map[y2-r:y2+r+1, c_x-r:c_x+r+1, 1] = 1
 
-	return seman_map,scale_map
+	return seman_map, scale_map
+
 
 def get_data(ped_data, C, batchsize = 8):
 	current_ped = 0
@@ -152,7 +153,7 @@ def get_data(ped_data, C, batchsize = 8):
 					elif C.point == 'bottom':
 						y_seman, y_height = calc_gt_bottom(C, img_data)
 					else:
-						y_seman, y_height = calc_gt_center(C, img_data,down=C.down, scale=C.scale, offset=False)
+						y_seman, y_height = calc_gt_center(C, img_data, down=C.down, scale=C.scale, offset=False)
 
 				x_img = x_img.astype(np.float32)
 				x_img[:, :, 0] -= C.img_channel_mean[0]
@@ -176,6 +177,7 @@ def get_data(ped_data, C, batchsize = 8):
 			yield np.copy(x_img_batch), [np.copy(y_seman_batch), np.copy(y_height_batch), np.copy(y_offset_batch)]
 		else:
 			yield np.copy(x_img_batch), [np.copy(y_seman_batch), np.copy(y_height_batch)]
+
 
 def get_data_hybrid(ped_data, emp_data, C, batchsize = 8,hyratio=0.5):
 	current_ped = 0

@@ -47,7 +47,6 @@ if not os.path.exists(out_path):
     os.makedirs(out_path)
     epoch = 0
 else:
-    int_strings = [*map(str, range(10))]
     checkpoint_paths = glob.glob(out_path + "/net*.hdf5")
     checkpoint_names = [f.split("/")[-1] for f in checkpoint_paths]
     epochs = [*map(int, [f.split("net_e")[1].split("_")[0] for f in checkpoint_names if "net_e" in f])]
