@@ -12,7 +12,7 @@ C = config.Config()
 C.offset = True
 cache_path = 'data/cache/caltech/test'
 with open(cache_path, 'rb') as fid:
-    val_data = pickle.load(fid)
+    val_data = pickle.load(fid, encoding='latin1')
 num_imgs = len(val_data)
 print('num of val samples: {}'.format(num_imgs))
 

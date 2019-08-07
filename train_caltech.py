@@ -27,9 +27,9 @@ os.environ["CUDA_VISIBLE_DEVICES"] = C.gpu_ids
 cache_ped = 'data/cache/caltech/train_gt'
 cache_emp = 'data/cache/caltech/train_nogt'
 with open(cache_ped, 'rb') as fid:
-    ped_data = pickle.load(fid)
+    ped_data = pickle.load(fid, encoding='latin1')
 with open(cache_emp, 'rb') as fid:
-    emp_data = pickle.load(fid)
+    emp_data = pickle.load(fid, encoding='latin1')
 num_imgs_ped = len(ped_data)
 num_imgs_emp = len(emp_data)
 print(('num of ped and emp samples: {} {}'.format(num_imgs_ped, num_imgs_emp)))

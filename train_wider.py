@@ -28,7 +28,7 @@ os.environ["CUDA_VISIBLE_DEVICES"] = C.gpu_ids
 # get the training data
 cache_path = 'data/cache/widerface/train'
 with open(cache_path, 'rb') as fid:
-    train_data = pickle.load(fid)
+    train_data = pickle.load(fid, encoding='latin1')
 num_imgs_train = len(train_data)
 print('num of training samples: {}'.format(num_imgs_train))
 data_gen_train = data_generators.get_data_wider(train_data, C, batchsize=batchsize)
