@@ -13,7 +13,7 @@ Besides the superority on pedestrian detection demonstrated in the paper, we tak
 * Python >= 3.6
 * Tensorflow >= 1.1.3
 * Keras >= 2.0.6
-* OpenCV >= 3.4.1.15
+* OpenCV >= 3.4.1.15  (note that other versions than 3.4.1.15 will result in different performance on Caltech)
 
 ## Contents
 1. [Installation](#installation)
@@ -38,7 +38,7 @@ Besides the superority on pedestrian detection demonstrated in the paper, we tak
   python setup.py build_ext --inplace
 ```
 
-4. Download pretrained weights:
+4. Download pretrained resnet50 weights (basenet only):
 ```
 ./download_weights.sh
 ```
