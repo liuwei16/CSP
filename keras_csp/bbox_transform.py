@@ -7,6 +7,7 @@
 
 import numpy as np
 
+
 def bbox_transform(ex_rois, gt_rois):
     ex_widths = ex_rois[:, 2] - ex_rois[:, 0] + 1.0
     ex_heights = ex_rois[:, 3] - ex_rois[:, 1] + 1.0
@@ -26,6 +27,7 @@ def bbox_transform(ex_rois, gt_rois):
     targets = np.vstack(
         (targets_dx, targets_dy, targets_dw, targets_dh)).transpose()
     return targets
+
 
 def bbox_transform_inv(boxes, deltas):
     if boxes.shape[0] == 0:
@@ -60,7 +62,8 @@ def bbox_transform_inv(boxes, deltas):
 
     return pred_boxes
 
-def compute_targets(ex_rois, gt_rois, classifier_regr_std,std):
+
+def compute_targets(ex_rois, gt_rois, classifier_regr_std, std):
     """Compute bounding-box regression targets for an image."""
 
     assert ex_rois.shape[0] == gt_rois.shape[0]
@@ -68,10 +71,11 @@ def compute_targets(ex_rois, gt_rois, classifier_regr_std,std):
     assert gt_rois.shape[1] == 4
 
     targets = bbox_transform(ex_rois, gt_rois)
-	# Optionally normalize targets by a precomputed mean and stdev
+    # Optionally normalize targets by a precomputed mean and stdev
     if std:
-		targets = targets/np.array(classifier_regr_std)
+        targets = targets / np.array(classifier_regr_std)
     return targets
+
 
 def clip_boxes(boxes, im_shape):
     # boxes[:, 0::4] = np.maximum(np.minimum(boxes[:, 0::4], im_shape[1] - 1), 0)

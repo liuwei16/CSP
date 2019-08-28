@@ -22,6 +22,7 @@ from keras.engine.topology import InputSpec
 from keras.engine.topology import Layer
 import numpy as np
 
+
 class L2Normalization(Layer):
     '''
     Performs L2 normalization on the input tensor with a learnable scaling parameter

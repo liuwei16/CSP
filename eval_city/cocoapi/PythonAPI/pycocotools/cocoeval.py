@@ -130,8 +130,8 @@ class COCOeval:
         # add backward compatibility if useSegm is specified in params
         if not p.useSegm is None:
             p.iouType = 'segm' if p.useSegm == 1 else 'bbox'
-            print('useSegm (deprecated) is not None. Running {} evaluation'.format(p.iouType))
-        print('Evaluate annotation type *{}*'.format(p.iouType))
+            print(('useSegm (deprecated) is not None. Running {} evaluation'.format(p.iouType)))
+        print(('Evaluate annotation type *{}*'.format(p.iouType)))
         p.imgIds = list(np.unique(p.imgIds))
         if p.useCats:
             p.catIds = list(np.unique(p.catIds))
@@ -159,7 +159,7 @@ class COCOeval:
              ]
         self._paramsEval = copy.deepcopy(self.params)
         toc = time.time()
-        print('DONE (t={:0.2f}s).'.format(toc-tic))
+        print(('DONE (t={:0.2f}s).'.format(toc-tic)))
 
     def computeIoU(self, imgId, catId):
         p = self.params
@@ -346,7 +346,7 @@ class COCOeval:
         # get inds to evaluate
         k_list = [n for n, k in enumerate(p.catIds)  if k in setK]
         m_list = [m for n, m in enumerate(p.maxDets) if m in setM]
-        a_list = [n for n, a in enumerate(map(lambda x: tuple(x), p.areaRng)) if a in setA]
+        a_list = [n for n, a in enumerate([tuple(x) for x in p.areaRng]) if a in setA]
         i_list = [n for n, i in enumerate(p.imgIds)  if i in setI]
         I0 = len(_pe.imgIds)
         A0 = len(_pe.areaRng)
@@ -418,7 +418,7 @@ class COCOeval:
             'scores': scores,
         }
         toc = time.time()
-        print('DONE (t={:0.2f}s).'.format( toc-tic))
+        print(('DONE (t={:0.2f}s).'.format( toc-tic)))
 
     def summarize(self):
         '''
@@ -454,7 +454,7 @@ class COCOeval:
                 mean_s = -1
             else:
                 mean_s = np.mean(s[s>-1])
-            print(iStr.format(titleStr, typeStr, iouStr, areaRng, maxDets, mean_s))
+            print((iStr.format(titleStr, typeStr, iouStr, areaRng, maxDets, mean_s)))
             return mean_s
         def _summarizeDets():
             stats = np.zeros((12,))

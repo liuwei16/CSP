@@ -1,4 +1,4 @@
-from __future__ import division
+
 import cv2
 import numpy as np
 import copy
@@ -85,20 +85,21 @@ def random_crop(image, gts, igs, crop_size, limit=8):
 
     return cropped_image, gts, igs
 
+
 def random_pave(image, gts, igs, pave_size, limit=8):
     img_height, img_width = image.shape[0:2]
     pave_h, pave_w = pave_size
     # paved_image = np.zeros((pave_h, pave_w, 3), dtype=image.dtype)
-    paved_image = np.ones((pave_h, pave_w, 3), dtype=image.dtype)*np.mean(image,dtype=int)
-    pave_x = int(np.random.randint(0, pave_w-img_width+1))
-    pave_y = int(np.random.randint(0, pave_h-img_height+1))
-    paved_image[pave_y:pave_y+img_height, pave_x:pave_x+img_width] = image
+    paved_image = np.ones((pave_h, pave_w, 3), dtype=image.dtype) * np.mean(image, dtype=int)
+    pave_x = int(np.random.randint(0, pave_w - img_width + 1))
+    pave_y = int(np.random.randint(0, pave_h - img_height + 1))
+    paved_image[pave_y:pave_y + img_height, pave_x:pave_x + img_width] = image
     # pave detections
     if len(igs) > 0:
         igs[:, 0:4:2] += pave_x
         igs[:, 1:4:2] += pave_y
-        keep_inds = ((igs[:, 2] - igs[:, 0]) >=8) & \
-                    ((igs[:, 3] - igs[:, 1]) >=8)
+        keep_inds = ((igs[:, 2] - igs[:, 0]) >= 8) & \
+                    ((igs[:, 3] - igs[:, 1]) >= 8)
         igs = igs[keep_inds]
 
     if len(gts) > 0:

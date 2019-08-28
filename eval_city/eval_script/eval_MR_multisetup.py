@@ -122,7 +122,7 @@ class COCOeval:
         # add backward compatibility if useSegm is specified in params
         if not p.useSegm is None:
             p.iouType = 'segm' if p.useSegm == 1 else 'bbox'
-            print('useSegm (deprecated) is not None. Running {} evaluation'.format(p.iouType))
+            print(('useSegm (deprecated) is not None. Running {} evaluation'.format(p.iouType)))
         # print('Evaluate annotation type *{}*'.format(p.iouType))
         p.imgIds = list(np.unique(p.imgIds))
         if p.useCats:
@@ -446,7 +446,7 @@ class COCOeval:
                 mean_s = np.log(mrs[mrs<2])
                 mean_s = np.mean(mean_s)
                 mean_s = np.exp(mean_s)
-            print(iStr.format(titleStr, typeStr,setupStr, iouStr, heightStr, occlStr, mean_s*100))
+            print((iStr.format(titleStr, typeStr,setupStr, iouStr, heightStr, occlStr, mean_s*100)))
             # res_file.write(iStr.format(titleStr, typeStr,setupStr, iouStr, heightStr, occlStr, mean_s*100))
             res_file.write(str(mean_s * 100))
             res_file.write('\n')

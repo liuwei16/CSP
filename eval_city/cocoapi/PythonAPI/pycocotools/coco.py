@@ -58,7 +58,7 @@ from collections import defaultdict
 import sys
 PYTHON_VERSION = sys.version_info[0]
 if PYTHON_VERSION == 2:
-    from urllib import urlretrieve
+    from urllib.request import urlretrieve
 elif PYTHON_VERSION == 3:
     from urllib.request import urlretrieve
 
@@ -83,7 +83,7 @@ class COCO:
             tic = time.time()
             dataset = json.load(open(annotation_file, 'r'))
             assert type(dataset)==dict, 'annotation file format {} not supported'.format(type(dataset))
-            print('Done (t={:0.2f}s)'.format(time.time()- tic))
+            print(('Done (t={:0.2f}s)'.format(time.time()- tic)))
             self.dataset = dataset
             self.createIndex()
 
@@ -123,8 +123,8 @@ class COCO:
         Print information about the annotation file.
         :return:
         """
-        for key, value in self.dataset['info'].items():
-            print('{}: {}'.format(key, value))
+        for key, value in list(self.dataset['info'].items()):
+            print(('{}: {}'.format(key, value)))
 
     def getAnnIds(self, imgIds=[], catIds=[], areaRng=[], iscrowd=None):
         """
@@ -187,7 +187,7 @@ class COCO:
         catIds = catIds if _isArrayLike(catIds) else [catIds]
 
         if len(imgIds) == len(catIds) == 0:
-            ids = self.imgs.keys()
+            ids = list(self.imgs.keys())
         else:
             ids = set(imgIds)
             for i, catId in enumerate(catIds):
@@ -292,7 +292,7 @@ class COCO:
             ax.add_collection(p)
         elif datasetType == 'captions':
             for ann in anns:
-                print(ann['caption'])
+                print((ann['caption']))
 
     def loadRes(self, resFile):
         """
@@ -305,7 +305,7 @@ class COCO:
 
         print('Loading and preparing results...')
         tic = time.time()
-        if type(resFile) == str or type(resFile) == unicode:
+        if type(resFile) == str or type(resFile) == str:
             anns = json.load(open(resFile))
         elif type(resFile) == np.ndarray:
             anns = self.loadNumpyAnnotations(resFile)
@@ -349,7 +349,7 @@ class COCO:
                 ann['area'] = (x1-x0)*(y1-y0)
                 ann['id'] = id + 1
                 ann['bbox'] = [x0,y0,x1-x0,y1-y0]
-        print('DONE (t={:0.2f}s)'.format(time.time()- tic))
+        print(('DONE (t={:0.2f}s)'.format(time.time()- tic)))
 
         res.dataset['annotations'] = anns
         res.createIndex()
@@ -366,7 +366,7 @@ class COCO:
             print('Please specify target directory')
             return -1
         if len(imgIds) == 0:
-            imgs = self.imgs.values()
+            imgs = list(self.imgs.values())
         else:
             imgs = self.loadImgs(imgIds)
         N = len(imgs)
@@ -377,7 +377,7 @@ class COCO:
             fname = os.path.join(tarDir, img['file_name'])
             if not os.path.exists(fname):
                 urlretrieve(img['coco_url'], fname)
-            print('downloaded {}/{} images (t={:0.1f}s)'.format(i, N, time.time()- tic))
+            print(('downloaded {}/{} images (t={:0.1f}s)'.format(i, N, time.time()- tic)))
 
     def loadNumpyAnnotations(self, data):
         """
@@ -387,13 +387,13 @@ class COCO:
         """
         print('Converting ndarray to lists...')
         assert(type(data) == np.ndarray)
-        print(data.shape)
+        print((data.shape))
         assert(data.shape[1] == 7)
         N = data.shape[0]
         ann = []
         for i in range(N):
             if i % 1000000 == 0:
-                print('{}/{}'.format(i,N))
+                print(('{}/{}'.format(i,N)))
             ann += [{
                 'image_id'  : int(data[i, 0]),
                 'bbox'  : [ data[i, 1], data[i, 2], data[i, 3], data[i, 4] ],
