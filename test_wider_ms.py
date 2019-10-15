@@ -1,6 +1,7 @@
 from __future__ import division
 import os
 import time
+import sys
 import cPickle
 from keras.layers import Input
 from keras.models import Model
@@ -52,8 +53,8 @@ for w_ind in range(382,383):
 	print res_path
 
 	start_time = time.time()
-	for f in range(num_imgs):
-		filepath = val_data[f]['filepath']
+	for idx in range(num_imgs):
+		filepath = val_data[idx]['filepath']
 		event = filepath.split('/')[-2]
 		event_path = os.path.join(res_path, event)
 		if not os.path.exists(event_path):
@@ -160,4 +161,10 @@ for w_ind in range(382,383):
 			for line in dets:
 				f.write('{:.0f} {:.0f} {:.0f} {:.0f} {:.3f}\n'.
 						format(line[0], line[1], line[2] - line[0] + 1, line[3] - line[1] + 1, line[4]))
+
+		# simple progress bar
+		sys.stdout.write('\r')
+		sys.stdout.write('{:5d}/{:5d}: {:s} done.'.format(idx+1, num_imgs, filename))
+		sys.stdout.flush()
+
 	print time.time() - start_time

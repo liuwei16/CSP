@@ -32,6 +32,11 @@ Besides the superority on pedestrian detection demonstrated in the paper, we tak
 ```
   pip install -r requirements.txt
 ```
+3. Compile the nms module.
+```
+  cd $CSP/keras_csp
+  make
+```
 
 ### Preparation
 1. Download the dataset.
@@ -137,7 +142,20 @@ To reproduce the results in our paper, we have provided the models trained from 
 ### Extension--Face Detection
 1. Data preparation 
 
- You should firstly download the [WiderFace](http://mmlab.ie.cuhk.edu.hk/projects/WIDERFace/) dataset and put it in `./data/WiderFace`. We have provided the cache files in `./data/cache/widerface` or you can follow [./genetrate_cache_wider.py](./genetrate_cache_wider.py) to cerate them.
+ You should firstly download the [WiderFace](http://mmlab.ie.cuhk.edu.hk/projects/WIDERFace/) dataset and put it in `./data/WiderFace`. We have provided the cache files in `./data/cache/widerface` or you can follow [./genetrate_cache_wider.py](./genetrate_cache_wider.py) to cerate them. The directory structure of `$CSP/data/WiderFace` should be:
+ ```shell
+CSP/data/WiderFace/
+|-- WIDER_test
+|   `-- images
+|       |...
+|-- WIDER_train
+|   `-- images
+|       |...
+|-- WIDER_val
+|   `-- images
+|       |...
+`-- wider_face_split
+ ```
  
 2. Training and Test
 
