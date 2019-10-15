@@ -32,6 +32,11 @@ Besides the superority on pedestrian detection demonstrated in the paper, we tak
 ```
   pip install -r requirements.txt
 ```
+3. Compile the nms module.
+```
+  cd $CSP/keras_csp
+  make
+```
 
 ### Preparation
 1. Download the dataset.
