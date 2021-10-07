@@ -1,5 +1,5 @@
 # High-level Semantic Feature Detection: A New Perspective for Pedestrian Detection
-Keras implementation of [CSP] accepted by CVPR 2019.
+Keras implementation of [CSP] accepted by CVPR 2019. A pytorch implementation is included in [Pedestron](https://github.com/hasanirtiza/Pedestron).
 ## Introduction
 This paper provides a new perspective for detecting pedestrians where detection is formulated as Center and Scale Prediction (CSP), the pipeline is illustrated in the following. For more details, please refer to our [paper](./docs/2019CVPR-CSP.pdf).
 ![img01](./docs/pipeline.png)
