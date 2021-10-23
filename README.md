@@ -1,7 +1,7 @@
 # High-level Semantic Feature Detection: A New Perspective for Pedestrian Detection
 Keras implementation of [CSP] accepted by CVPR 2019. A pytorch implementation is included in [Pedestron](https://github.com/hasanirtiza/Pedestron).
 ## Introduction
-This paper provides a new perspective for detecting pedestrians where detection is formulated as Center and Scale Prediction (CSP), the pipeline is illustrated in the following. For more details, please refer to our [paper](./docs/2019CVPR-CSP.pdf).
+This paper provides a new perspective for detecting pedestrians where detection is formulated as Center and Scale Prediction (CSP), the pipeline is illustrated in the following. For more details, please refer to our [paper](http://openaccess.thecvf.com/content_CVPR_2019/papers/Liu_High-Level_Semantic_Feature_Detection_A_New_Perspective_for_Pedestrian_Detection_CVPR_2019_paper.pdf).
 ![img01](./docs/pipeline.png)
 
 Besides the superority on pedestrian detection demonstrated in the paper, we take a step further towards the generablity of CSP and validate it on face detection. Experimental reults on WiderFace benchmark also show the competitiveness of CSP.
@@ -10,10 +10,10 @@ Besides the superority on pedestrian detection demonstrated in the paper, we tak
 
 ### Dependencies
 
-* Python 2.7
-* Tensorflow 1.4.1
-* Keras 2.0.6
-* OpenCV 3.4.1.15
+* Python >= 3.6
+* Tensorflow >= 1.1.3
+* Keras >= 2.0.6
+* OpenCV >= 3.4.1.15  (note that other versions than 3.4.1.15 will result in different performance on Caltech)
 
 ## Contents
 1. [Installation](#installation)
@@ -32,6 +32,17 @@ Besides the superority on pedestrian detection demonstrated in the paper, we tak
 ```
   pip install -r requirements.txt
 ```
+
+3. Build dependencies
+```
+  python setup.py build_ext --inplace
+```
+
+4. Download pretrained resnet50 weights (basenet only):
+```
+./download_weights.sh
+```
+
 
 ### Preparation
 1. Download the dataset.

@@ -1,0 +1,5 @@
+.idea/
+build/
+data/
+__pycache__
+output

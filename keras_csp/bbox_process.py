@@ -1,18 +1,18 @@
-from __future__ import division
 import numpy as np
-from nms_wrapper import nms
+from keras_csp.nms_wrapper import nms
 
-def parse_det(Y, C, score=0.1, down=4,scale='h'):
+
+def parse_det(Y, C, score=0.1, down=4, scale='h'):
     seman = Y[0][0, :, :, 0]
-    if scale=='h':
-        height = np.exp(Y[1][0, :, :, 0])*down
-        width = 0.41*height
-    elif scale=='w':
-        width = np.exp(Y[1][0, :, :, 0])*down
-        height = width/0.41
-    elif scale=='hw':
-        height = np.exp(Y[1][0, :, :, 0])*down
-        width = np.exp(Y[1][0, :, :, 1])*down
+    if scale == 'h':
+        height = np.exp(Y[1][0, :, :, 0]) * down
+        width = 0.41 * height
+    elif scale == 'w':
+        width = np.exp(Y[1][0, :, :, 0]) * down
+        height = width / 0.41
+    elif scale == 'hw':
+        height = np.exp(Y[1][0, :, :, 0]) * down
+        width = np.exp(Y[1][0, :, :, 1]) * down
     y_c, x_c = np.where(seman > score)
     boxs = []
     if len(y_c) > 0:
@@ -20,12 +20,13 @@ def parse_det(Y, C, score=0.1, down=4,scale='h'):
             h = height[y_c[i], x_c[i]]
             w = width[y_c[i], x_c[i]]
             s = seman[y_c[i], x_c[i]]
-            x1, y1 = max(0, (x_c[i]+0.5) * down - w / 2), max(0, (y_c[i]+0.5) * down - h / 2)
+            x1, y1 = max(0, (x_c[i] + 0.5) * down - w / 2), max(0, (y_c[i] + 0.5) * down - h / 2)
             boxs.append([x1, y1, min(x1 + w, C.size_test[1]), min(y1 + h, C.size_test[0]), s])
         boxs = np.asarray(boxs, dtype=np.float32)
         keep = nms(boxs, 0.5, usegpu=False, gpu_id=0)
         boxs = boxs[keep, :]
     return boxs
+
 
 def parse_det_top(Y, C, score=0.1):
     seman = Y[0][0, :, :, 0]
@@ -44,6 +45,7 @@ def parse_det_top(Y, C, score=0.1):
         boxs = boxs[keep, :]
     return boxs
 
+
 def parse_det_bottom(Y, C, score=0.1):
     seman = Y[0][0, :, :, 0]
     height = Y[1][0, :, :, 0]
@@ -54,14 +56,15 @@ def parse_det_bottom(Y, C, score=0.1):
             h = np.exp(height[y_c[i], x_c[i]]) * 4
             w = 0.41 * h
             s = seman[y_c[i], x_c[i]]
-            x1, y1 = max(0, x_c[i] * 4 + 2 - w / 2), max(0, y_c[i] * 4 + 2-h)
+            x1, y1 = max(0, x_c[i] * 4 + 2 - w / 2), max(0, y_c[i] * 4 + 2 - h)
             boxs.append([x1, y1, min(x1 + w, C.size_test[1]), min(y1 + h, C.size_test[0]), s])
         boxs = np.asarray(boxs, dtype=np.float32)
         keep = nms(boxs, 0.5, usegpu=False, gpu_id=0)
         boxs = boxs[keep, :]
     return boxs
 
-def parse_det_offset(Y, C, score=0.1,down=4):
+
+def parse_det_offset(Y, C, score=0.1, down=4):
     seman = Y[0][0, :, :, 0]
     height = Y[1][0, :, :, 0]
     offset_y = Y[2][0, :, :, 0]
@@ -71,7 +74,7 @@ def parse_det_offset(Y, C, score=0.1,down=4):
     if len(y_c) > 0:
         for i in range(len(y_c)):
             h = np.exp(height[y_c[i], x_c[i]]) * down
-            w = 0.41*h
+            w = 0.41 * h
             o_y = offset_y[y_c[i], x_c[i]]
             o_x = offset_x[y_c[i], x_c[i]]
             s = seman[y_c[i], x_c[i]]
@@ -82,7 +85,8 @@ def parse_det_offset(Y, C, score=0.1,down=4):
         boxs = boxs[keep, :]
     return boxs
 
-def parse_wider_offset(Y, C, score=0.1,down=4,nmsthre=0.5):
+
+def parse_wider_offset(Y, C, score=0.1, down=4, nmsthre=0.5):
     seman = Y[0][0, :, :, 0]
     height = Y[1][0, :, :, 0]
     width = Y[1][0, :, :, 1]
@@ -101,12 +105,13 @@ def parse_wider_offset(Y, C, score=0.1,down=4,nmsthre=0.5):
             x1, y1 = min(x1, C.size_test[1]), min(y1, C.size_test[0])
             boxs.append([x1, y1, min(x1 + w, C.size_test[1]), min(y1 + h, C.size_test[0]), s])
         boxs = np.asarray(boxs, dtype=np.float32)
-        #keep = nms(boxs, nmsthre, usegpu=False, gpu_id=0)
-        #boxs = boxs[keep, :]
-	boxs = soft_bbox_vote(boxs,thre=nmsthre)
+        # keep = nms(boxs, nmsthre, usegpu=False, gpu_id=0)
+        # boxs = boxs[keep, :]
+        boxs = soft_bbox_vote(boxs, thre=nmsthre)
     return boxs
 
-def soft_bbox_vote(det,thre=0.35,score=0.05):
+
+def soft_bbox_vote(det, thre=0.35, score=0.05):
     if det.shape[0] <= 1:
         return det
     order = det[:, 4].ravel().argsort()[::-1]
@@ -160,7 +165,8 @@ def soft_bbox_vote(det,thre=0.35,score=0.05):
     dets = dets[order, :]
     return dets
 
-def bbox_vote(det,thre):
+
+def bbox_vote(det, thre):
     if det.shape[0] <= 1:
         return det
     order = det[:, 4].ravel().argsort()[::-1]
